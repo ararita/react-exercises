@@ -1,7 +1,8 @@
 // import "./App.css";
 import { useState, useEffect } from "react";
+import { uniq } from "lodash";
 
-function getStory(id) {
+function getItem(id) {
   return fetch(
     `https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`
   ).then((response) => {
@@ -13,9 +14,10 @@ function getStory(id) {
 }
 
 function App() {
-  const [stories, setStories] = useState([]);
+  const [items, setItems] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState("");
+  const [filterByType, setFilterByType] = useState();
 
   //https://hacker-news.firebaseio.com/v0/item/12.json?print=pretty
   //https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty
@@ -32,10 +34,10 @@ function App() {
         (myJson) => {
           const myPromises = [];
           for (let id of myJson) {
-            myPromises.push(getStory(id));
+            myPromises.push(getItem(id));
           }
-          return Promise.all(myPromises).then((stories) => {
-            setStories(stories);
+          return Promise.all(myPromises).then((items) => {
+            setItems(items);
             setIsLoaded(true);
           });
         },
@@ -43,9 +45,23 @@ function App() {
           setError(error);
         }
       );
-    // .catch((err) => setError(err.message));
+    // .catch((err) => setError(err));
   }, []);
-  console.log(stories);
+  console.log("items", items);
+
+  const filteredItems = items.filter((item) => {
+    return item.type === filterByType;
+    // if (filterByType === null) {
+    //   return true;
+    // } else {
+    //   return item.type === filterByType;
+    // }
+  });
+
+  console.log("filteredItems", filteredItems);
+
+  const itemTypeOptions = uniq(items.map((item) => item.type));
+
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
@@ -53,13 +69,30 @@ function App() {
   } else {
     return (
       <div className="App">
-        {/* <pre>{JSON.stringify(stories, null, 2)}</pre>{" "} */}
-        {stories.map((story, id) => (
+        {/* <pre>{JSON.stringify(items, null, 2)}</pre>{" "} */}
+
+        <select onChange={(e) => setFilterByType(e.target.value)}>
+          <option value={null}>All types</option>
+          {itemTypeOptions &&
+            itemTypeOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+        </select>
+        {items &&
+          filteredItems.map((item) => (
+            <div key={item.id}>
+              <h3>by: {item.by}</h3>
+              <a href={item.url}>{item.title}</a>
+            </div>
+          ))}
+        {/* {items.map((item, id) => (
           <div key={id}>
-            <h3>by: {story.by}</h3>
-            <a href={story.url}>{story.title}</a>
+            <h3>by: {item.by}</h3>
+            <a href={item.url}>{item.title}</a>
           </div>
-        ))}
+        ))} */}
       </div>
     );
   }
