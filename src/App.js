@@ -77,9 +77,17 @@ function App() {
             itemTypeOptions.map((option, i) => (
               <option key={i} value={option}>
                 {option}
+                {console.log("option:", option)}
               </option>
             ))}
         </select>
+        {/* <select onChange={(e) => setFilterCuisine(e.target.value)}>
+        <option value={null}>All cuisines</option>
+        {cuisineOptions &&
+          cuisineOptions.map((option) => (
+            <option value={option}>{capitalize(option)}</option>
+          ))}
+      </select> */}
         {items &&
           filteredItems.map((item) => (
             <div key={item.id}>
