@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import BreweryItem from "./BreweryItem.jsx";
+import BreweryItem from "./BreweryItem";
 
 function BreweryList() {
   const [items, setItems] = useState([]);
