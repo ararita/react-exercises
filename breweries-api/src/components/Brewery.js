@@ -48,7 +48,7 @@ function Brewery({ match }) {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div data-testid="brewery-list">Loading...</div>;
+    return <div data-testid="brewery-detail">Loading...</div>;
   } else {
     return (
       <div data-testid="brewery-detail">
