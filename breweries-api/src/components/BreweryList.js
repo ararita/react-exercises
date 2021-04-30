@@ -36,7 +36,7 @@ function BreweryList() {
       <div data-testid="brewery-list">
         {items &&
           items
-            .slice(0, 10)
+            // .slice(0, 10)
             .map((item) => (
               <BreweryItem
                 key={item.id}

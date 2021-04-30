@@ -32,6 +32,19 @@ function Brewery({ match }) {
       );
   }, [id]);
 
+  const {
+    name,
+    brewery_type,
+    country,
+    city,
+    street,
+    address_2,
+    address_3,
+    phone,
+    website_url,
+    postal_code,
+  } = item;
+
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
@@ -39,15 +52,16 @@ function Brewery({ match }) {
   } else {
     return (
       <div data-testid="brewery-detail">
-        <h1>{item.name}</h1>
-        <p>{item.brewery_type}</p>
-        <p>{item.country}</p>
-        <p>{item.city}</p>
-        <p>{item.street}</p>
-        <p>{item.address_2}</p>
-        <p>{item.address_3}</p>
-        <p>{item.phone}</p>
-        <a href={item.website_url}>{item.website_url}</a>
+        <h1>{name}</h1>
+        <p>{brewery_type}</p>
+        <p>{country}</p>
+        <p>{city}</p>
+        <p>{street}</p>
+        <p>{postal_code}</p>
+        <p>{address_2}</p>
+        <p>{address_3}</p>
+        <p>{phone}</p>
+        <a href={website_url}>{website_url ? website_url : ""}</a>
       </div>
     );
   }
