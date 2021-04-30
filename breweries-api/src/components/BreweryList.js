@@ -81,9 +81,7 @@ function BreweryList() {
         {items &&
           breweryFiltered
             // .slice(0, 10)
-            .map((item) => (
-              <BreweryItem key={item.id} id={item.id} brewery={item} />
-            ))}
+            .map((item) => <BreweryItem key={item.id} brewery={item} />)}
       </div>
     );
   }
