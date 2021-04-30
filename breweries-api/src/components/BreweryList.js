@@ -59,20 +59,19 @@ function BreweryList() {
   } else {
     return (
       <div data-testid="brewery-list">
-        <select onChange={(e) => setFilterBreweryType(e.target.value)}>
-          <option value={""}>All types</option>
-          {typeOptions &&
-            typeOptions.map((option) => (
+        <select onChange={(e) => setFilterState(e.target.value)}>
+          <option value={""}>All states</option>
+          {stateOptions &&
+            stateOptions.map((option) => (
               <option key={option.id} value={option}>
                 {option}
               </option>
             ))}
         </select>
-
-        <select onChange={(e) => setFilterState(e.target.value)}>
-          <option value={""}>All states</option>
-          {stateOptions &&
-            stateOptions.map((option) => (
+        <select onChange={(e) => setFilterBreweryType(e.target.value)}>
+          <option value={""}>All types</option>
+          {typeOptions &&
+            typeOptions.map((option) => (
               <option key={option.id} value={option}>
                 {option}
               </option>
