@@ -6,7 +6,7 @@ function BreweryList() {
   const [items, setItems] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
-  const [filterBreweryType, setFilterBreweryType] = useState(null);
+  const [filterBreweryType, setFilterBreweryType] = useState("");
   const [filterState, setFilterState] = useState("");
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function BreweryList() {
       // } else {
       //   return brewery.brewery_type === filterBreweryType;
       // }
-      return filterBreweryType === null
+      return filterBreweryType === ""
         ? true
         : brewery.brewery_type === filterBreweryType;
     })
@@ -49,7 +49,8 @@ function BreweryList() {
   const typeOptions = uniq(items.map((brewery) => brewery.brewery_type));
   const stateOptions = uniq(items.map((brewery) => brewery.state));
 
-  console.log("stateOptions", stateOptions);
+  // console.log("stateOptions", stateOptions);
+  console.log("typeOptions", typeOptions);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -59,7 +60,7 @@ function BreweryList() {
     return (
       <div data-testid="brewery-list">
         <select onChange={(e) => setFilterBreweryType(e.target.value)}>
-          <option value={null}>All types</option>
+          <option value={""}>All types</option>
           {typeOptions &&
             typeOptions.map((option) => (
               <option key={option.id} value={option}>
