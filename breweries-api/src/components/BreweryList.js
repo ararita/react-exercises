@@ -7,6 +7,7 @@ function BreweryList() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
   const [filterBreweryType, setFilterBreweryType] = useState(null);
+  const [filterState, setFilterState] = useState("");
 
   useEffect(() => {
     fetch("https://api.openbrewerydb.org/breweries")
@@ -29,18 +30,26 @@ function BreweryList() {
       );
   }, []);
 
-  const breweryFiltered = items.filter((brewery) => {
-    console.log("brewery", brewery);
-    if (filterBreweryType === null) {
-      return true;
-    } else {
-      return brewery.brewery_type === filterBreweryType;
-    }
-  });
+  const breweryFiltered = items
+    .filter((brewery) => {
+      // console.log("brewery", brewery);
+      // if (filterBreweryType === null) {
+      //   return true;
+      // } else {
+      //   return brewery.brewery_type === filterBreweryType;
+      // }
+      return filterBreweryType === null
+        ? true
+        : brewery.brewery_type === filterBreweryType;
+    })
+    .filter((brewery) => {
+      return filterState === "" ? true : brewery.state === filterState;
+    });
 
   const typeOptions = uniq(items.map((brewery) => brewery.brewery_type));
+  const stateOptions = uniq(items.map((brewery) => brewery.state));
 
-  // console.log("typeOptions", typeOptions);
+  console.log("stateOptions", stateOptions);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -50,9 +59,19 @@ function BreweryList() {
     return (
       <div data-testid="brewery-list">
         <select onChange={(e) => setFilterBreweryType(e.target.value)}>
-          <option value={null}>Filter by type</option>
+          <option value={null}>All types</option>
           {typeOptions &&
             typeOptions.map((option) => (
+              <option key={option.id} value={option}>
+                {option}
+              </option>
+            ))}
+        </select>
+
+        <select onChange={(e) => setFilterState(e.target.value)}>
+          <option value={""}>All states</option>
+          {stateOptions &&
+            stateOptions.map((option) => (
               <option key={option.id} value={option}>
                 {option}
               </option>
