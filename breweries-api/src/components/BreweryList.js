@@ -9,7 +9,7 @@ function BreweryList() {
   const [filterBreweryType, setFilterBreweryType] = useState("");
   const [filterState, setFilterState] = useState("");
   const [search, setSearch] = useState("");
-  // const [filteredResult, setFilteredresult] = useState([]);
+  const [filteredResult, setFilteredresult] = useState([]);
 
   useEffect(() => {
     fetch("https://api.openbrewerydb.org/breweries")
@@ -32,29 +32,37 @@ function BreweryList() {
       );
   }, []);
 
-  // useEffect(() => {
-  //   setFilteredresult(
-  //     items.filter((item) =>
-  //       item.name.toLowerCase().includes(search.toLowerCase())
-  //     )
-  //   );
-  // }, [search, items]);
+  useEffect(() => {
+    setFilteredresult(
+      items
+        .filter((brewery) => {
+          return filterBreweryType === ""
+            ? true
+            : brewery.brewery_type === filterBreweryType;
+        })
+        .filter((brewery) => {
+          return filterState === "" ? true : brewery.state === filterState;
+        })
+        .filter((brewery) => {
+          return brewery.name.toLowerCase().includes(search.toLowerCase());
+        })
+    );
+  }, [filterBreweryType, filterState, items, search]);
 
   // console.log("filteredResult", filteredResult);
 
-  const breweryFiltered = items
-    .filter((brewery) => {
-      return filterBreweryType === ""
-        ? true
-        : brewery.brewery_type === filterBreweryType;
-    })
-    .filter((brewery) => {
-      return filterState === "" ? true : brewery.state === filterState;
-    })
-    .filter((brewery) => {
-      return brewery.name.toLowerCase().includes(search.toLowerCase());
-      //
-    });
+  // const breweryFiltered = items
+  //   .filter((brewery) => {
+  //     return filterBreweryType === ""
+  //       ? true
+  //       : brewery.brewery_type === filterBreweryType;
+  //   })
+  //   .filter((brewery) => {
+  //     return filterState === "" ? true : brewery.state === filterState;
+  //   })
+  //   .filter((brewery) => {
+  //     return brewery.name.toLowerCase().includes(search.toLowerCase());
+  //   });
 
   const typeOptions = uniq(items.map((brewery) => brewery.brewery_type));
   const stateOptions = uniq(items.map((brewery) => brewery.state));
@@ -92,8 +100,8 @@ function BreweryList() {
               </option>
             ))}
         </select>
-        {items && breweryFiltered.length !== 0 ? (
-          breweryFiltered.map((item) => (
+        {items && filteredResult.length !== 0 ? (
+          filteredResult.map((item) => (
             <BreweryItem key={item.id} brewery={item} />
           ))
         ) : (
