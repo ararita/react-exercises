@@ -32,6 +32,11 @@ function BreweryList() {
       );
   }, []);
 
+  //useEffect so it doesn't compute the filter every time
+  //the component rerenders, but only when
+  //1. user types in the searchbox,
+  //2. or selects from the dropdowns
+
   useEffect(() => {
     setFilteredresult(
       items
@@ -40,12 +45,12 @@ function BreweryList() {
             ? true
             : brewery.brewery_type === filterBreweryType;
         })
-        .filter((brewery) => {
-          return filterState === "" ? true : brewery.state === filterState;
-        })
-        .filter((brewery) => {
-          return brewery.name.toLowerCase().includes(search.toLowerCase());
-        })
+        .filter((brewery) =>
+          filterState === "" ? true : brewery.state === filterState
+        )
+        .filter((brewery) =>
+          brewery.name.toLowerCase().includes(search.toLowerCase())
+        )
     );
   }, [filterBreweryType, filterState, items, search]);
 
@@ -66,8 +71,6 @@ function BreweryList() {
 
   const typeOptions = uniq(items.map((brewery) => brewery.brewery_type));
   const stateOptions = uniq(items.map((brewery) => brewery.state));
-  // console.log("stateOptions", stateOptions);
-  // console.log("typeOptions", typeOptions);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -79,9 +82,13 @@ function BreweryList() {
         <h1>Breweries</h1>
         <input
           type="text"
-          placeholder="Search by name"
+          placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
         />
+
+        <br></br>
+        <br></br>
+
         <select onChange={(e) => setFilterState(e.target.value)}>
           <option value={""}>All states</option>
           {stateOptions &&
