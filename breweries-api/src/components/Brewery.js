@@ -4,7 +4,6 @@ function Brewery({ match }) {
   console.log("match", match);
 
   const id = match.params.id;
-  // console.log(id);
 
   // const brewery = breweries.find((brewery) => brewery.id === match.params.id);
 

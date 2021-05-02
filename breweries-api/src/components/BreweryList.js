@@ -8,6 +8,8 @@ function BreweryList() {
   const [error, setError] = useState(null);
   const [filterBreweryType, setFilterBreweryType] = useState("");
   const [filterState, setFilterState] = useState("");
+  const [search, setSearch] = useState("");
+  const [filteredResult, setFilteredresult] = useState([]);
 
   useEffect(() => {
     fetch("https://api.openbrewerydb.org/breweries")
@@ -30,14 +32,18 @@ function BreweryList() {
       );
   }, []);
 
+  useEffect(() => {
+    setFilteredresult(
+      items.filter((item) =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search, items]);
+
+  console.log("filteredResult", filteredResult);
+
   const breweryFiltered = items
     .filter((brewery) => {
-      // console.log("brewery", brewery);
-      // if (filterBreweryType === null) {
-      //   return true;
-      // } else {
-      //   return brewery.brewery_type === filterBreweryType;
-      // }
       return filterBreweryType === ""
         ? true
         : brewery.brewery_type === filterBreweryType;
@@ -48,9 +54,8 @@ function BreweryList() {
 
   const typeOptions = uniq(items.map((brewery) => brewery.brewery_type));
   const stateOptions = uniq(items.map((brewery) => brewery.state));
-
   // console.log("stateOptions", stateOptions);
-  console.log("typeOptions", typeOptions);
+  // console.log("typeOptions", typeOptions);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -59,6 +64,12 @@ function BreweryList() {
   } else {
     return (
       <div data-testid="brewery-list">
+        <h1>Breweries</h1>
+        <input
+          type="text"
+          placeholder="Search by name"
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <select onChange={(e) => setFilterState(e.target.value)}>
           <option value={""}>All states</option>
           {stateOptions &&
@@ -77,10 +88,16 @@ function BreweryList() {
               </option>
             ))}
         </select>
-        {items &&
-          breweryFiltered
-            // .slice(0, 10)
-            .map((item) => <BreweryItem key={item.id} brewery={item} />)}
+        {filteredResult.length !== 0 ? (
+          filteredResult.map((item) => (
+            <BreweryItem key={item.id} brewery={item} />
+          ))
+        ) : (
+          <p>No breweries with that name</p>
+        )}
+        {breweryFiltered.map((item) => (
+          <BreweryItem key={item.id} brewery={item} />
+        ))}
       </div>
     );
   }
